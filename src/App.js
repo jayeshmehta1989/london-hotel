@@ -1,15 +1,55 @@
 import React from 'react';
 import './App.css';
+import { Authenticator } from '@aws-amplify/ui-react';
+
+import { Amplify } from "aws-amplify"
+
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      userPoolId: "ap-northeast-1_hbXZxwKKm",
+      userPoolClientId: "774drvk6tvdhlamucthis2g28j",
+      identityPoolId: "ap-northeast-1:bac8fe86-b9e5-4dd7-b557-b128bdd4e896",
+      loginWith: {
+        email: true,
+      },
+      signUpVerificationMethod: "code",
+      userAttributes: {
+        email: {
+          required: true,
+        },
+      },
+      allowGuestAccess: true,
+      passwordFormat: {
+        minLength: 8,
+        requireLowercase: true,
+        requireUppercase: true,
+        requireNumbers: true,
+        requireSpecialCharacters: true,
+      },
+    },
+  },
+})
+
+
+
+
 
 class App extends React.Component {
   render() {
     return (
+      <Authenticator>
+      {({ signOut, user }) => (
+
       <div className="App">
         <header id="intro">
           <article className="fullheight">
-            <div className="hgroup">
+          
+            <div className="hgroup"> 
               <h1>Landon Hotel</h1>
               <h2>West London</h2>
+              <h1>Welcome, {user.username}</h1>
+              <button onClick={signOut}>Sign out</button>
               <p><a href="#welcome"><img src="https://landonhotel.com/images/misc/arrow.png" alt="down arrow" /></a></p>
             </div>
           </article>
@@ -119,6 +159,8 @@ class App extends React.Component {
           </article>
         </footer>
       </div>
+      )}
+      </Authenticator>
     );
   }
 }
